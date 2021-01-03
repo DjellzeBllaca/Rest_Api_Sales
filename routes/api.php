@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\StockController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,4 +31,8 @@ Route::post('/stock', [StockController::class,'store']);
 Route::put('/stock/{id}', [StockController::class,'update']);
 Route::delete('/stock/{id}', [StockController::class,'destroy']);
 
+Route::get('/sale', [SaleController::class,'index']);
+Route::post('/sale', [SaleController::class,'store']);
+Route::put('/sale/{id}', [SaleController::class,'update']);
+Route::delete('/sale/{id}', [SaleController::class,'destroy']);
 
