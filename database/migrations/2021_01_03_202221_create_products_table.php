@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('category');
             $table->string('name');
             $table->string('barcode')->unique();
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('price');
             $table->boolean('status')->default(true);
             $table->timestamps();
