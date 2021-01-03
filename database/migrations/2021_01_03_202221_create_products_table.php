@@ -19,7 +19,7 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->string('barcode')->unique();
             $table->string('description')->nullable();
-            $table->string('price');
+            $table->decimal('price', 10, 2);
             $table->boolean('status')->default(true);
             $table->timestamps();
         });

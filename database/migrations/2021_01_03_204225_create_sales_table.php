@@ -18,8 +18,8 @@ class CreateSalesTable extends Migration
             $table->unsignedBigInteger('sale_id');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->unsignedInteger('quantity')->default(1);
-            $table->string('unit_price');
-            $table->string('total_price');
+            $table->decimal('unit_price', 10, 2);
+            $table->decimal('total_price', 10,2);
             $table->timestamps();
         });
     }

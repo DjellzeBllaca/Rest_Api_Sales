@@ -21,7 +21,7 @@ class ProductSeeder extends Seeder
                 'name' => 'Iphone 12',
                 'barcode' => '4006381333931',
                 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-                'price' => '1400',
+                'price' => 139.99,
                 'status' => true,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -31,7 +31,7 @@ class ProductSeeder extends Seeder
                 'name' => 'Samsung Galaxy Note20 Ultra',
                 'barcode' => '5006381333931',
                 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-                'price' => '1000',
+                'price' => 1000,
                 'status' => true,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
