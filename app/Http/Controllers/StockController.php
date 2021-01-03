@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Stock;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class StockController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return response()->json(Product::all(), 200);
+        return response()->json(Stock::all(), 200);
     }
 
     /**
@@ -35,35 +35,29 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        try {
             $this->validate($request, [
-                'category' => 'required|max:255',
-                'name' => 'required|min:2|max:255',
-                'barcode' => 'required|unique:products',
-                'description' => 'max:255',
-                'price' => 'required',
+                'product_id' => 'required|exists:products,id',
+                'quantity' => 'required|numeric|min:0',
                 'status' => 'boolean',
             ]);
 
-            $product = new Product;
-            $product->category = $request->input('category');
-            $product->name = $request->input('name');
-            $product->barcode = $request->input('barcode');
-            $product->description = $request->input('description');
-            $product->price = $request->input('price');
-            $product->status = $request->input('status');
-            $product->save();
+            $stock = new Stock;
+            $stock->product_id = $request->input('product_id');
+            $stock->quantity = $request->input('quantity');
+            $stock->status = $request->input('status');
+            $stock->save();
 
             $code = 201;
             $output = [
                 'code'=> $code,
-                'message'=>"Product has been created successfully."
-            ];
+                'message'=>"Stock has been created."];
+
         }catch (\Exception $e) {
             $code = 409;
             $output = [
                 'code'=> $code,
-                'message'=>"Error: Product could not be created."
+                'message'=>"Stock could not be created"
             ];
         }
         return response()->json($output, $code);
@@ -101,42 +95,36 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try{
-            $product = Product::find($id);
-            if (!$product) {
+            $stock = Stock::find($id);
+            if (!$stock) {
                 $code = 409;
                 $output = [
                     'code'=> $code,
-                    'message'=>"Product does not exist!"
+                    'message'=>"Stock does not exist!"
                 ];
             }
             else {
                 $this->validate($request, [
-                    'category' => 'required|max:255',
-                    'name' => 'required|min:2|max:255',
-                    'barcode' => 'required|unique:products',
-                    'description' => 'max:255',
-                    'price' => 'required',
-                    'status' => 'boolean'
+                    'product_id' => 'required|exists:products,id',
+                    'quantity' => 'required|numeric|min:0',
+                    'status' => 'boolean',
                 ]);
 
-                $product->category = $request->input('category');
-                $product->name = $request->input('name');
-                $product->barcode = $request->input('barcode');
-                $product->description = $request->input('description');
-                $product->price = $request->input('price');
-                $product->status = $request->input('status');
-                $product->update();
+                $stock->product_id = $request->input('product_id');
+                $stock->quantity = $request->input('quantity');
+                $stock->update();
 
                 $code = 201;
                 $output = [
                     'code' => $code,
-                    'message' => "Product updated successfully!"];
+                    'message' => "Stock updated successfully!"
+                ];
             }
         }catch (\Exception $e) {
             $code = 409;
             $output = [
                 'code'=> $code,
-                'message'=>"Could not update product"
+                'message'=>"Stock could not updated!"
             ];
         }
         return response()->json($output, $code);
@@ -151,27 +139,27 @@ class ProductController extends Controller
     public function destroy($id)
     {
         try{
-            $product = Product::find($id);
+            $stock = Stock::find($id);
 
-            if ($product->delete()){
+            if ($stock->delete()){
                 $code = 201;
                 $output = [
                     'code'=> $code,
-                    'message'=>"Product deleted successfully!"
+                    'message'=>"Stock deleted successfully!"
                 ];
             }
             else{
                 $code = 409;
                 $output = [
                     'code'=> $code,
-                    'message'=>"Product failed to delete!!"
+                    'message'=>"Stock failed to delete!!"
                 ];
             }
         } catch (\Exception $e) {
-            $code = 400;
+            $code = 409;
             $output = [
                 'code'=> $code,
-                'message'=>"Product failed to delete!"
+                'message'=>"Stock failed to delete!"
             ];
         }
         return response()->json($output, $code);
