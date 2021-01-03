@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sale;
+use App\Models\Stock;
 use Illuminate\Http\Request;
 
 class SaleController extends Controller
@@ -36,13 +37,18 @@ class SaleController extends Controller
     public function store(Request $request)
     {
         try {
+            $stock = Stock::where('product_id', $request->input('product_id'))->firstOrFail();
+            $qty = $stock->quantity;
+
             $this->validate($request,
                 [
                     'sale_id' => 'required|numeric',
                     'product_id' => 'required|exists:products,id',
-                    'quantity' => 'required|numeric|min:1',
+                    'quantity' => 'required|numeric|min:1|max:'.$qty,
                     'unit_price' => 'required',
                 ]);
+
+            $stock->decrement('quantity', $request->input('quantity'));
 
             $sale = new Sale;
             $sale->sale_id = $request->input('sale_id');
@@ -110,11 +116,14 @@ class SaleController extends Controller
                 ];
             }
             else {
+                $stock = Stock::where('product_id', $request->input('product_id'))->firstOrFail();
+                $qty = $stock->quantity;
+
                 $this->validate($request,
                     [
                         'sale_id' => 'required|numeric',
                         'product_id' => 'required|exists:products,id',
-                        'quantity' => 'required|numeric|min:1',
+                        'quantity' => 'required|numeric|min:1|max:'.$qty,
                         'unit_price' => 'required',
                     ]);
 
@@ -124,6 +133,8 @@ class SaleController extends Controller
                 $sale->unit_price = $request->input('unit_price');
                 $sale->total_price = $request->input('unit_price') * $request->input('quantity');
                 $sale->update();
+
+                $stock->decrement('quantity', $request->input('quantity'));
 
                 $code = 201;
                 $output = [
