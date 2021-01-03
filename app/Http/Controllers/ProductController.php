@@ -150,6 +150,30 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            $product = Product::find($id);
+
+            if ($product->delete()){
+                $code = 204;
+                $output = [
+                    'code'=> $code,
+                    'message'=>"Product deleted successfully!"
+                ];
+            }
+            else{
+                $code = 409;
+                $output = [
+                    'code'=> $code,
+                    'message'=>"Product failed to delete!!"
+                ];
+            }
+        } catch (\Exception $e) {
+            $code = 400;
+            $output = [
+                'code'=> $code,
+                'message'=>"Product failed to delete!"
+            ];
+        }
+        return response()->json($output, $code);
     }
 }
