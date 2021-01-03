@@ -41,7 +41,8 @@ class ProductController extends Controller
                 'name' => 'required|min:2|max:255',
                 'barcode' => 'required|unique:products',
                 'description' => 'max:255',
-                'price' => 'required'
+                'price' => 'required',
+                'status' => 'boolean',
             ]);
 
             $product = new Product;
@@ -99,7 +100,46 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $product = Product::find($id);
+            if (!$product) {
+                $code = 409;
+                $output = [
+                    'code'=> $code,
+                    'message'=>"Product does not exist!"
+                ];
+            }
+            else {
+                $this->validate($request, [
+                    'category' => 'required|max:255',
+                    'name' => 'required|min:2|max:255',
+                    'barcode' => 'required|unique:products',
+                    'description' => 'max:255',
+                    'price' => 'required',
+                    'status' => 'boolean'
+                ]);
+
+                $product->category = $request->input('category');
+                $product->name = $request->input('name');
+                $product->barcode = $request->input('barcode');
+                $product->description = $request->input('description');
+                $product->price = $request->input('price');
+                $product->status = $request->input('status');
+                $product->update();
+
+                $code = 201;
+                $output = [
+                    'code' => $code,
+                    'message' => "Product updated successfully!"];
+            }
+        }catch (\Exception $e) {
+            $code = 409;
+            $output = [
+                'code'=> $code,
+                'message'=>"Could not update product"
+            ];
+        }
+        return response()->json($output, $code);
     }
 
     /**
