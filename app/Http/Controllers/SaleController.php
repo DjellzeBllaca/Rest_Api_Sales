@@ -38,7 +38,6 @@ class SaleController extends Controller
                     'unit_price' => 'required',
                 ]);
 
-            $stock->decrement('quantity', $request->input('quantity'));
 
             $sale = new Sale;
             $sale->sale_id = $request->input('sale_id');
@@ -47,6 +46,9 @@ class SaleController extends Controller
             $sale->unit_price = $request->input('unit_price');
             $sale->total_price = $request->input('unit_price') * $request->input('quantity');
             $sale->save();
+            
+            $stock->decrement('quantity', $request->input('quantity'));
+
 
             $code = 201;
             $output = [
